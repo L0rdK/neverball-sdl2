@@ -60,7 +60,7 @@ endif
 
 # Preprocessor...
 
-SDL_CPPFLAGS := $(shell sdl-config --cflags) -U_GNU_SOURCE
+SDL_CPPFLAGS := $(shell sdl2-config --cflags) -U_GNU_SOURCE
 PNG_CPPFLAGS := $(shell libpng-config --cflags)
 
 ALL_CPPFLAGS := $(SDL_CPPFLAGS) $(PNG_CPPFLAGS) -Ishare
@@ -85,7 +85,7 @@ ALL_CPPFLAGS += $(CPPFLAGS)
 #------------------------------------------------------------------------------
 # Libraries
 
-SDL_LIBS := $(shell sdl-config --libs)
+SDL_LIBS := $(shell sdl2-config --libs)
 PNG_LIBS := $(shell libpng-config --libs)
 
 ifeq ($(ENABLE_FS),stdio)
@@ -140,7 +140,7 @@ ifeq ($(PLATFORM),darwin)
     BASE_LIBS += -L/opt/local/lib
 endif
 
-ALL_LIBS := $(SDL_LIBS) $(X11_LIBS) $(BASE_LIBS) $(TILT_LIBS) $(INTL_LIBS) -lSDL_ttf \
+ALL_LIBS := $(SDL_LIBS) $(X11_LIBS) $(BASE_LIBS) $(TILT_LIBS) $(INTL_LIBS) -lSDL2_ttf \
     -lvorbisfile $(OGL_LIBS)
 
 #------------------------------------------------------------------------------
