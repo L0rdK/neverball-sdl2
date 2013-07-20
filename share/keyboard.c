@@ -97,7 +97,7 @@ const char *pretty_keyname(int key)
     const char *ugly_keyname;
     int i;
 
-    if ((ugly_keyname = SDL_GetKeyName((SDLKey) key)) == NULL)
+    if ((ugly_keyname = SDL_GetKeyName((SDL_Keycode) key)) == NULL)
         return NULL;
 
     for (i = 0; i < ARRAYSIZE(keynames); i++)

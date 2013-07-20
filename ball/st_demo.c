@@ -512,8 +512,12 @@ static int demo_play_click(int b, int d)
 {
     if (d)
     {
+        /* FIXME: scrolling not available */
+
+        /*
         if (b == SDL_BUTTON_WHEELUP)   set_speed(+1);
         if (b == SDL_BUTTON_WHEELDOWN) set_speed(-1);
+        */
     }
 
     return 1;

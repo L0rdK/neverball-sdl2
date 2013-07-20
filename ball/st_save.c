@@ -137,14 +137,18 @@ static int save_gui(void)
 
 static int save_enter(struct state *st, struct state *prev)
 {
+    /* FIXME
     SDL_EnableUNICODE(1);
+    */
 
     return save_gui();
 }
 
 static void save_leave(struct state *st, struct state *next, int id)
 {
-    SDL_EnableUNICODE(0);
+    /* FIXME
+    SDL_EnableUNICODE(1);
+    */
     gui_delete(id);
 }
 

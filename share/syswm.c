@@ -25,14 +25,14 @@
 
 /*---------------------------------------------------------------------------*/
 
-void set_SDL_icon(const char *filename)
+void set_SDL_icon(SDL_Window *window, const char *filename)
 {
 #if !defined(__APPLE__) && !defined(_WIN32)
     SDL_Surface *icon;
 
     if ((icon = load_surface(filename)))
     {
-        SDL_WM_SetIcon(icon, NULL);
+        SDL_SetWindowIcon(window, icon);
         free(icon->pixels);
         SDL_FreeSurface(icon);
     }
@@ -40,20 +40,20 @@ void set_SDL_icon(const char *filename)
     return;
 }
 
-void set_EWMH_icon(const char *filename)
+void set_EWMH_icon(SDL_Window *window, const char *filename)
 {
 #if SDL_VIDEO_DRIVER_X11 && !SDL_VIDEO_DRIVER_QUARTZ
     SDL_SysWMinfo info;
 
     Display *dpy;
-    Window   window;
+    Window   wdw;
 
     unsigned char *p;
     int w, h, b;
 
     SDL_VERSION(&info.version);
 
-    if (SDL_GetWMInfo(&info) != 1)
+    if (SDL_GetWindowWMInfo(window, &info) != 1)
     {
         fprintf(stderr, L_("Failed to get WM info: %s\n"), SDL_GetError());
         return;
@@ -63,7 +63,7 @@ void set_EWMH_icon(const char *filename)
         return;
 
     dpy    = info.info.x11.display;
-    window = info.info.x11.wmwindow;
+    wdw = info.info.x11.window;
 
     /*
      * This code loads an image and sets it as the _NET_WM_ICON window
@@ -113,15 +113,19 @@ void set_EWMH_icon(const char *filename)
                     }
                 }
 
+            /* FIXME: lock_func() and unlock_func() not available */
+
+            /*
             info.info.x11.lock_func();
             {
                 Atom icon = XInternAtom(dpy, "_NET_WM_ICON", False);
 
-                XChangeProperty(dpy, window, icon, XA_CARDINAL, 32,
+                XChangeProperty(dpy, wdw, icon, XA_CARDINAL, 32,
                                 PropModeReplace, (unsigned char *) data,
                                 2 + w * h);
             }
             info.info.x11.unlock_func();
+            */
 
             free(data);
         }

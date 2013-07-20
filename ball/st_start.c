@@ -336,8 +336,12 @@ static int start_click(int b, int d)
 
     if (d)
     {
-        if (b == SDL_BUTTON_WHEELUP)   start_score(-1);
-        if (b == SDL_BUTTON_WHEELDOWN) start_score(+1);
+        /* FIXME: scrolling not available */
+
+        /*
+        if (b == SDL_BUTTON_WHEELUP)   start_score(+1);
+        if (b == SDL_BUTTON_WHEELDOWN) start_score(-1);
+        */
     }
 
     return 1;

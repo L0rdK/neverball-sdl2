@@ -14,6 +14,7 @@
  */
 
 
+#include <SDL/SDL.h>
 #include <string.h>
 
 #include "gui.h"

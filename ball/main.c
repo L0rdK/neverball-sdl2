@@ -139,10 +139,13 @@ static int handle_key_dn(SDL_Event *e)
         else if (config_tst_d(CONFIG_KEY_RIGHT, c))
             st_stick(config_get_d(CONFIG_JOYSTICK_AXIS_X), +1.0f);
 
-        if (SDL_EnableUNICODE(-1))
+        /* FIXME: SDL_EnableUNICODE() is not available */
+
+        /*if (SDL_EnableUNICODE(-1))
             d = st_keybd(e->key.keysym.unicode, 1);
-        else
-            d = st_keybd(e->key.keysym.sym, 1);
+        else*/
+
+        d = st_keybd(e->key.keysym.sym, 1);
     }
 
     return d;
@@ -216,11 +219,17 @@ static int loop(void)
             d = handle_key_up(&e);
             break;
 
+        /* FIXME: SDL_ACTIVEEVENT not available.
+         * http://instead.googlecode.com/svn/trunk/src/sdl-instead/input.c
+         */
+
+        /*
         case SDL_ACTIVEEVENT:
             if (e.active.state == SDL_APPINPUTFOCUS)
                 if (e.active.gain == 0 && video_get_grab())
                     goto_state(&st_pause);
             break;
+        */
 
         case SDL_JOYAXISMOTION:
             st_stick(e.jaxis.axis, JOY_VALUE(e.jaxis.value));

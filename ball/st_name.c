@@ -137,7 +137,9 @@ static int name_enter(struct state *st, struct state *prev)
         back_init("back/gui.png");
     }
 
+    /* FIXME
     SDL_EnableUNICODE(1);
+    */
 
     return name_gui();
 }
@@ -147,7 +149,9 @@ static void name_leave(struct state *st, struct state *next, int id)
     if (draw_back)
         back_free();
 
-    SDL_EnableUNICODE(0);
+    /* FIXME
+    SDL_EnableUNICODE(1);
+    */
     gui_delete(id);
 }
 
