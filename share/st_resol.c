@@ -14,8 +14,9 @@
  */
 
 
-#include <SDL/SDL.h>
 #include <string.h>
+
+#include <SDL.h>
 
 #include "gui.h"
 #include "geom.h"
@@ -29,7 +30,7 @@
 extern struct state  st_null;
 static struct state *st_back;
 
-static SDL_Rect **modes;
+static SDL_DisplayMode **modes;
 
 /*---------------------------------------------------------------------------*/
 
@@ -63,7 +64,7 @@ static int resol_action(int tok, int val)
     return r;
 }
 
-static int fill_row(int id, SDL_Rect **modes, int i, int n)
+static int fill_row(int id, SDL_DisplayMode **modes, int i, int n)
 {
     int complete;
 
@@ -121,6 +122,65 @@ static int resol_gui(void)
     return id;
 }
 
+static void list_modes()
+{
+    int i, nmodes;
+    SDL_DisplayMode mode;
+    SDL_DisplayMode cur_mode;
+
+    SDL_GetCurrentDisplayMode(0, &cur_mode);
+
+    nmodes = 0;
+    modes = NULL;
+    for (i = 0; i < SDL_GetNumDisplayModes(0); ++i)
+    {
+        SDL_GetDisplayMode(0, i, &mode);
+        if (!mode.w || !mode.h)
+        {
+            return;
+        }
+        if (SDL_BITSPERPIXEL(mode.format) !=
+            SDL_BITSPERPIXEL(cur_mode.format))
+        {
+            continue;
+        }
+        if (nmodes > 0 && modes[nmodes - 1]->w == mode.w
+            && modes[nmodes - 1]->h == mode.h)
+        {
+            continue;
+        }
+
+        modes = SDL_realloc(modes, (nmodes + 2) * sizeof(*modes));
+        if (!modes)
+        {
+            return;
+        }
+
+        modes[nmodes] = SDL_malloc(sizeof(SDL_DisplayMode));
+        if (!modes[nmodes])
+        {
+            return;
+        }
+        *modes[nmodes] = mode;
+        ++nmodes;
+    }
+
+    if (modes) {
+        modes[nmodes] = NULL;
+    }
+}
+
+static void free_modes()
+{
+    int i;
+
+    for (i = 0; modes[i]; ++i) {
+        SDL_free(modes[i]);
+    }
+
+    SDL_free(modes);
+}
+
 static int resol_enter(struct state *st, struct state *prev)
 {
     if (!st_back)
@@ -132,10 +192,7 @@ static int resol_enter(struct state *st, struct state *prev)
 
     back_init("back/gui.png");
 
-    modes = SDL_ListModes(NULL, SDL_OPENGL | SDL_FULLSCREEN);
-
-    if (modes == (SDL_Rect **) -1)
-        modes = NULL;
+    list_modes();
 
     audio_music_fade_to(0.5f, "bgm/inter.ogg");
 
@@ -146,6 +203,7 @@ static void resol_leave(struct state *st, struct state *next, int id)
 {
     back_free();
     gui_delete(id);
+    free_modes();
 }
 
 static void resol_paint(int id, float st)
