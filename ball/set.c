@@ -585,11 +585,7 @@ void level_snap(int i, const char *path)
         game_client_draw(POSE_LEVEL, 0);
         image_snap(filename);
 
-        /* FIXME: get the SDL_Window from here */
-
-        /*
-        SDL_GL_SwapBuffers();
-        */
+        SDL_GL_SwapWindow(video_get_window());
     }
 
     free(filename);

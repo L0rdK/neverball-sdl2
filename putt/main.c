@@ -193,11 +193,17 @@ static int loop(void)
             }
             break;
 
+        /* FIXME: SDL_ACTIVEEVENT not available.
+         * http://instead.googlecode.com/svn/trunk/src/sdl-instead/input.c
+         */
+
+        /*
         case SDL_ACTIVEEVENT:
             if (e.active.state == SDL_APPINPUTFOCUS)
                 if (e.active.gain == 0 && video_get_grab())
                     goto_pause(&st_over, 0);
             break;
+        */
 
         case SDL_JOYAXISMOTION:
             st_stick(e.jaxis.axis, JOY_VALUE(e.jaxis.value));
@@ -343,7 +349,7 @@ int main(int argc, char *argv[])
                     st_timer((t1 - t0) / 1000.f);
                     st_paint(0.001f * t1);
                     shot_take();
-                    SDL_GL_SwapBuffers();
+                    SDL_GL_SwapWindow(video_get_window());
 
                     t0 = t1;
 
