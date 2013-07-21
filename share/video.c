@@ -100,6 +100,8 @@ int video_mode(int f, int w, int h)
         config_set_d(CONFIG_WIDTH,      w);
         config_set_d(CONFIG_HEIGHT,     h);
 
+        SDL_GL_CreateContext(window);
+
         if (!glext_init())
             return 0;
 
