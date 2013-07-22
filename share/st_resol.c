@@ -43,6 +43,7 @@ enum
 static int resol_action(int tok, int val)
 {
     int r = 1;
+    int w, h;
 
     audio_play("snd/menu.ogg", 1.0f);
 
@@ -54,9 +55,11 @@ static int resol_action(int tok, int val)
         break;
 
     case RESOL_SELECT:
+        w = modes[val]->w;
+        h = modes[val]->h;
+
         goto_state(&st_null);
-        r = video_mode(config_get_d(CONFIG_FULLSCREEN),
-                       modes[val]->w, modes[val]->h);
+        r = video_mode(config_get_d(CONFIG_FULLSCREEN), w, h);
         goto_state(&st_resol);
         break;
     }
