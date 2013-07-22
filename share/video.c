@@ -22,7 +22,8 @@
 
 /*---------------------------------------------------------------------------*/
 
-static SDL_Window *window;
+static SDL_Window *window = NULL;
+static SDL_GLContext gl_context;
 
 SDL_Window *video_get_window(void)
 {
@@ -89,6 +90,14 @@ int video_mode(int f, int w, int h)
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,  16);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
+    /* A window was already created, delete it. */
+
+    if (window != NULL)
+    {
+        SDL_GL_DeleteContext(gl_context);
+        SDL_DestroyWindow(window);
+    }
+
     /* Try to set the currently specified mode. */
 
     window = SDL_CreateWindow(
@@ -105,7 +114,7 @@ int video_mode(int f, int w, int h)
         config_set_d(CONFIG_WIDTH,      w);
         config_set_d(CONFIG_HEIGHT,     h);
 
-        SDL_GL_CreateContext(window);
+        gl_context = SDL_GL_CreateContext(window);
 
         if (!glext_init())
             return 0;
